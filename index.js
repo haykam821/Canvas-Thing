@@ -8,18 +8,26 @@ const toolbarY = canvas.height * 0.92;
 let tools = [
 	{
 		name: "Pen",
-		icon: "🖋️"
+		icon: "P"
 	},
 	{
 		name: "Eraser",
 		icon: "E"
 	},
 	{
-		name: "Test",
+		name: "Coordinates",
 		icon: "C"
 	}
 ];
 let selectedTool = 0;
+
+window.addEventListener("keydown", event => {
+	const code = event.code;
+  if (code.startsWith("Digit")) {
+  	const indexSelected = parseInt(code.replace("Digit", "")) - 1;
+  	selectedTool = tools[indexSelected] ? indexSelected : selectedTool;
+  }
+});
 
 function render() {
 	ctx.fillStyle = "lightgray";
@@ -28,18 +36,17 @@ function render() {
 	ctx.fillStyle = "black";
 	ctx.fillRect(0, canvas.height, canvas.width, canvas.height * -0.15);
 	
-	ctx.fillStyle = "pink";
-	ctx.fillRect(canvas.width / 2, 0, 5, canvas.height)
-	
 	ctx.font = `${canvas.height * 0.08}px sans-serif`;
 	ctx.textAlign = "center";
 	ctx.textBaseline = "middle";
 	ctx.fillStyle = "white";
 	for (let index = 0; index < tools.length; index++) {
+  	const toolbarRaisedY = selectedTool === index ? toolbarY - 15 : toolbarY;
+  
 		const item = tools[index];
-		ctx.fillText(item.icon, canvas.width / 2 + (index / (tools.length + 1)), toolbarY);
+		ctx.fillText(item.icon, index * 50 + canvas.width / 2 - ((tools.length - 1) * 25), toolbarRaisedY);
 	}
 	
 	window.requestAnimationFrame(render);
 }
-render();
+window.requestAnimationFrame(render);
